@@ -1,41 +1,23 @@
-.. sds-335-fa21-git documentation master file, created by
-   sphinx-quickstart on Mon Oct 25 15:08:55 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-..
-  Welcome to sds-335-fa21-git's documentation!
-  ============================================
-  
-  .. toctree::
-     :maxdepth: 2
-     :caption: Contents:
-  
-  
-  
-  Indices and tables
-  ==================
-  
-  * :ref:`genindex`
-  * :ref:`modindex`
-  * :ref:`search`
-
 
 Version Control with Git
 ========================
 
-In this module, we will look at the version control system **Git**. Of the
-numerous version control systems available (Git, Subversion, CVS, Mercurial),
-Git seems to be the most popular, and we generally find that it is great for:
+.. contents:: Table of Contents
+   :depth: 2
+
+
+This material contains a short introduction to the version control system
+**Git**. Of the numerous version control systems available (Git, Subversion,
+CVS, Mercurial, etc.), Git is the most popular. What it lacks in user-friendliness
+it makes up for in good documentation. We generally find that it is great for:
 
 * Collaborating with others on code
 * Supporting multiple concurrent versions (branches)
 * Tagging releases or snapshots in time
 * Restoring previous versions of files
-* What it lacks in user-friendliness it makes up for in good documentation
 * Intuitive web platforms available
 
-After going through this module, students should be able to:
+After working through this material, students should be able to:
 
 * Create a new Git repository hosted on GitHub
 * Clone a repository, commit and push changes to the repository
@@ -43,13 +25,10 @@ After going through this module, students should be able to:
 * Work collaboratively with others on the content in a Git repository
 * Demonstrate a basic understanding of forking, branching, and tags
 
-GitHub is a web platform where you can host and share Git repositories
-("repos"). Repositories can be public or private. Much of what we will do with
-this section requires you to have a GitHub account.
 
 
-The Basics of Git
------------------
+The Basics of Version Control
+-----------------------------
 
 Version control systems start with a base version of the document and then
 record changes you make each step of the way. You can think of it as a recording
@@ -95,36 +74,46 @@ collaboration among different people.
 
 
 
-Setting up Git
---------------
+Set up Git / GitHub
+-------------------
 
-Log on to the class ISP server and check which version of Git is in your
-``PATH``.
+Git
+~~~
 
-.. code-block:: bash
-
-   [local]$ ssh username@isp02.tacc.utexas.edu   # use your account
-   (enter password)
-
-   [isp02]$ which git
-   /opt/apps/git/2.24.1/bin/git
-   $ git --version
-   git version 1.8.3.1
-
-When we use Git on a new computer for the first time, we need to configure a few
+When we use Git on a new machine for the first time, we need to configure a few
 things. Below are a few examples of configurations we will set as we get started
 with Git:
 
 * Our name and email address,
+* Default main branch name,
 * And that we want to use these settings globally (i.e. for every project).
 
-On a command line, Git commands are written as ``git verb``, where ``verb`` is
-what we actually want to do. Here is how we set up our environment:
+Git comes with a nice command line interface to help configure, and to navigate
+and perform all of the version control features. The command line interface
+takes the form ``git verb``, where ``verb`` is what we actually want to do.
 
-.. code-block:: bash
+To get started with an example, log on to Frontera and check which version of
+Git is in your ``PATH``.
 
-   [isp02]$ git config --global user.name "Joe Allen"
-   [isp02]$ git config --global user.email "wallen@tacc.utexas.edu"
+.. code-block:: console
+
+   [local]$ ssh username@frontera.tacc.utexas.edu   # use your account
+   (enter password)
+   (enter token)
+
+   [fta]$ which git
+   /opt/apps/git/2.24.1/bin/git
+   [fta]$ git version
+   git version 2.24.1
+
+Since you are the only one who can log in to Frontera with your username, it is
+safe and reasonable to configure Git globally with your name and e-mail address:
+
+.. code-block:: console
+
+   [fta]$ git config --global user.name "Joe Allen"
+   [fta]$ git config --global user.email "wallen@tacc.utexas.edu"
+   [fta]$ git config --global init.defaultBranch main
 
 Please use your own name and email address. This user name and email will be
 associated with your subsequent Git activity, which means that any changes
@@ -134,152 +123,263 @@ pushed to
 `GitLab <https://gitlab.com/>`_ or
 another Git host server in the future will include this information.
 
-.. tip::
-
-   A key benefit of Git is that it is platform agnostic. You can use it equally
-   to interact with the same files from your laptop, from a lab computer, or
-   from a cluster.
-
-
-Create a New Repository on the Command Line
--------------------------------------------
-
-First, let's navigate back to our folder from the JSON module:
-
-.. code-block:: bash
-
-   [isp02]$ cd ~/coe-332/week02-json
-
-Then we will use a Git command to initialize this directory as a new Git
-repository - or a place where Git can start to organize versions of our files.
-
-.. code-block:: bash
-
-   [isp02]$ git init
-   Initialized empty Git repository in /home/wallen/coe-332/week02-json/.git/
-
-If we use ``ls -a``, we can see that Git has created a hidden directory called
-``.git``:
-
-.. code-block:: bash
-
-   [isp02]$ ls -a
-   ./  ../  class.json  .git/  json_ex.py  json_write.py  states.json
-
-Use the ``find`` command to get a overview of the contents of the ``.git/``
-directory:
-
-.. code-block:: bash
-
-   [isp02]$ find .git/
-   .git
-   .git/refs
-   .git/refs/heads
-   .git/refs/tags
-   .git/branches
-   .git/description
-   .git/hooks
-   .git/hooks/applypatch-msg.sample
-   .git/hooks/commit-msg.sample
-   .git/hooks/post-update.sample
-   .git/hooks/pre-applypatch.sample
-   .git/hooks/pre-commit.sample
-   .git/hooks/pre-push.sample
-   .git/hooks/pre-rebase.sample
-   .git/hooks/prepare-commit-msg.sample
-   .git/hooks/update.sample
-   .git/info
-   .git/info/exclude
-   .git/HEAD
-   .git/config
-   .git/objects
-   .git/objects/pack
-   .git/objects/info
-
-Git uses this special sub-directory to store all the information about the
-project, including all files and sub-directories located within the project's
-directory. If we ever delete the ``.git`` sub-directory, we will lose the
-project's history. We can check that everything is set up correctly by asking
-Git to tell us the status of our project:
-
-.. code-block:: bash
-
-   [isp02]$ git status
-   # On branch main
-   #
-   # Initial commit
-   #
-   # Untracked files:
-   #   (use "git add <file>..." to include in what will be committed)
-   #
-   #       class.json
-   #       json_ex.py
-   #       json_write.py
-   #       states.json
-   nothing added to commit but untracked files present (use "git add" to track)
-
-.. note::
-
-   If you are using a different version of ``git``, the exact wording of the
-   output might be slightly different.
 
 EXERCISE
 ~~~~~~~~
 
-* Explore the files and folders in the ``.git/`` directory
-* Can you find a file with your name and e-mail in it? How did it get there?
+* Type ``git help`` on the command line and take a few minutes to read the help
+  text.
+
+GitHub
+~~~~~~
+
+GitHub is a web platform where you can host and share Git repositories
+("repos"). Repositories can be public or private. Much of what we will do with
+this section requires you to have a GitHub account. First sign up for a GitHub
+account:
+
+.. figure:: ./images/github_setup1.png
+    :width: 600px
+    :align: center
+
+    Click on 'Sign up' in the top right
+
+
+GitHub has recently gotten more serious about security. Simple username /
+password authentication is no longer accepted from the Git command line. The
+easiest way to authenticate with GitHub via the command line is with SSH keys.
+Once logged in to GitHub, click on your avatar in the top right corner, choose
+"Settings", and choose "SSH and GPG keys":
+
+.. figure:: ./images/github_setup2.png
+    :width: 600px
+    :align: center
+
+    Click on your avatar in the top right, then 'Settings'
+
+.. figure:: ./images/github_setup3.png
+    :width: 600px
+    :align: center
+
+    Click on 'SSH and GPG keys' on the left-hand side
+
+.. figure:: ./images/github_setup4.png
+    :width: 600px
+    :align: center
+
+    Click on 'New SSH Key'
+
+
+Back on Frontera, you will need to grab a copy of your SSH **public key** and
+paste it into the GitHub key manager. To find the public key on Frontera,
+execute:
+
+.. code-block:: console
+
+    [fta]$ cat ~/.ssh/id_rsa.pub
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAwhWa3/RZwaTrAqXE/VnUsTry3N9MCGXPvRLRj+R
+    TtbANqFg00VR0bAvKTQVd0c3tGmx3Hmbg58JRd0og49HHC3U0v+CiFw6UFk/8S8bJC9VITjkHwy+
+    HEzDX9UpNrpf1DCuzUH+aP9fkqS/BgMmgjOStObLW4O6vIXoi1Tm/j6NDjrd51B6XwNRZvUarfRM
+    n6wyBP28K+YzWEabDVucNw0byr9ikGx7xhMtFxwz6k+7AfMepize1zk9WZnp6Z24T+qGU4ulBLIw
+    3tm+YL8epe6aIFV7J0vV3nb7WG/L0B3NDPl4L wallen@login1.frontera.tacc.utexas.edu
+
+
+Now you are all ready to interact with the Git repos hosted on GitHub from
+Frontera.
+
+
+.. tip::
+
+   A key benefit of Git is that it is platform agnostic. You can use it
+   to interact with the same files from your laptop, from a lab computer, or
+   from a cluster.
+
+
+
+Get Started with a New Repository
+---------------------------------
+
+Let's create a new directory on Frontera and use Git commands to initialize it
+as a Git repository.
+
+.. code-block:: console
+
+    [fta]$ cd ~/                # cd to your home dir
+    [fta]$ mkdir my-git-repo/   # make a new dir
+    [fta]$ cd my-git-repo/      # cd into that new dir
+    [fta]$ git init             # initialize as a git repo
+    Initialized empty Git repository in /home1/03439/wallen/my-git-repo/.git/
+
+
+Now, we have the option to use the version control system Git to track all of
+the files we create in this directory. Not everything needs to be tracked, but
+Git will generally be *aware* of everything in here unless we tell it explicitly
+to ignore it.
+
+If we use ``ls -a``, we can see that Git has created a hidden directory called
+``.git``:
+
+.. code-block:: console
+
+   [fta]$ pwd
+   /home1/03439/wallen/my-git-repo/
+   [fta]$ ls -a
+   ./  ../  .git/
+
+Use the ``find`` command to get a overview of the contents of the ``.git/``
+directory:
+
+.. code-block:: console
+
+   [fta]$ find .git/
+   .git/
+   .git/description
+   .git/config
+   .git/objects
+   .git/objects/pack
+   .git/objects/info
+   .git/hooks
+   .git/hooks/pre-merge-commit.sample
+   .git/hooks/pre-rebase.sample
+   .git/hooks/prepare-commit-msg.sample
+   .git/hooks/update.sample
+   .git/hooks/applypatch-msg.sample
+   .git/hooks/pre-applypatch.sample
+   .git/hooks/pre-commit.sample
+   .git/hooks/commit-msg.sample
+   .git/hooks/post-update.sample
+   .git/hooks/fsmonitor-watchman.sample
+   .git/hooks/pre-push.sample
+   .git/hooks/pre-receive.sample
+   .git/refs
+   .git/refs/tags
+   .git/refs/heads
+   .git/HEAD
+   .git/info
+   .git/info/exclude
+   .git/branches
+
+
+Git uses this special sub-directory to store all the information about the
+project, including all the history of changes to all files located within the
+project directory and subdirectories. If we ever delete the ``.git`` directory,
+we will lose the project's history. We can check that everything is set up
+correctly by asking Git to tell us the status of our project:
+
+.. code-block:: console
+
+   [fta]$ git status
+   On branch master
+
+   No commits yet
+
+   nothing to commit (create/copy files and use "git add" to track)
+
+
+Although we configured Git to use the default branch name **main**, it seems that
+does not work until version 2.28.0! To rename the base branch, do:
+
+.. code-block:: console
+
+   [fta]$ git checkout -b main
+   [fta]$ git status
+   On branch main
+
+   No commits yet
+
+   nothing to commit (create/copy files and use "git add" to track)
+
+
+.. note::
+
+   If you are using a different version of ``git``, the exact wording of the
+   output might be slightly different. Make sure you are not using a really old
+   version (< ~2.24) if you want to take advantage of all the features.
+
+
+EXERCISE
+~~~~~~~~
+
+* Take a few minutes to explore the files and folders in the ``.git/`` directory.
 
 
 
 Tracking Changes
-----------------
+~~~~~~~~~~~~~~~~
 
-We will use this repository track some changes we are about to make to our
-example JSON parsing scripts. Above, Git mentioned that it found several
-"Untracked files". This means there are files in this current directory that Git
-isn't keeping track of. We can instruct Git to start tracking a file using
-``git add``:
+We will use this repository to track some simple code we are about to write.
+Above, Git mentioned that it did not find anything to commit. Let's create a
+new file to start tracking. Use your favorite text editor to create an easy
+"Hello, world!" script in C++:
 
-.. code-block:: bash
+.. code-block:: cpp
+   :linenos:
 
-   [isp02]$ git add json_ex.py
-   [isp02]$ git status
-   # On branch main
-   #
-   # Initial commit
-   #
-   # Changes to be committed:
-   #   (use "git rm --cached <file>..." to unstage)
-   #
-   #       new file:   json_ex.py
-   #
-   # Untracked files:
-   #   (use "git add <file>..." to include in what will be committed)
-   #
-   #       class.json
-   #       json_write.py
-   #       states.json
+    #include <iostream>
+    using namespace std;
+
+    int main() {
+
+            cout << "Hello, world!" << endl;
+            return 0;
+    }
+
+If we now check the status again, Git informs you that there is a new, untracked
+file. And, it provides some simple instructions on how to start tracking this
+file, making it part of the **repository**.
+
+.. code-block:: console
+
+    [fta]$ pwd
+    /home1/03439/wallen/my-git-repo/
+    [fta]$ ls
+    hello_world.cpp
+    [fta]$ git status
+    On branch main
+
+    No commits yet
+
+    Untracked files:
+      (use "git add <file>..." to include in what will be committed)
+            hello_world.cpp
+
+    nothing added to commit but untracked files present (use "git add" to track)
+
+Use the Git verb ``add`` to add the new file to the list of things to track:
+
+.. code-block:: console
+
+
+    [fta]$ git add hello_world.cpp
+    [fta]$ git status
+    On branch main
+
+    No commits yet
+
+    Changes to be committed:
+      (use "git rm --cached <file>..." to unstage)
+            new file:   hello_world.cpp
 
 
 Commit Changes to the Repo
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Git now knows that it's supposed to keep track of ``json_ex.py``, but it hasn't
-recorded these changes as a commit yet. To get it to do that, we need to run one
-more command:
+Git now knows that it's supposed to keep track of ``hello_world.cpp``, but it
+hasn't recorded these changes as a commit yet. To get it to do that, we need to
+run one more command:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git commit -m "started tracking json example script"
-   [main (root-commit) 344ec9f] started tracking json example script
-    1 file changed, 29 insertions(+)
-    create mode 100644 json_ex.py
+   [fta]$ git commit -m "started tracking hello world program"
+   [main (root-commit) 50b4adc] started tracking hello world program
+    1 file changed, 8 insertions(+)
+    create mode 100644 hello_world.cpp
 
 
 When we run ``git commit``, Git takes everything we have told it to save by
 using ``git add`` and stores a copy permanently inside the special ``.git``
 directory. This permanent copy is called a "commit" (or "revision") and its
-short identifier is ``344ec9f``. Your commit may have another identifier.
+short identifier is ``50b4adc``. Your commit will have a different identifier.
 
 We use the ``-m`` flag ("m" for "message") to record a short, descriptive, and
 specific comment that will help us remember later on what we did and why. Good
@@ -292,61 +392,44 @@ will be.
 
 If we run ``git status`` now:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git status
-   # On branch main
-   # Untracked files:
-   #   (use "git add <file>..." to include in what will be committed)
-   #
-   #       class.json
-   #       json_write.py
-   #       states.json
-   nothing added to commit but untracked files present (use "git add" to track)
+   [fta]$ git status
+   On branch main
+   nothing to commit, working tree clean
 
-We find three remaining untracked files.
 
 EXERCISE
 ~~~~~~~~
 
-Do a ``git add <file>`` followed by a ``git commit -m "descriptive message"``
-for each file, one by one. Also do a ``git status`` in between each command.
+* Create a ``Makefile`` for compiling your ``hello_world.cpp`` program. Test to
+  make sure it works. Then, use ``git add <file>`` followed by
+  ``git commit -m "descriptive message"`` to commit the Makefile to the repo.
+  Also, do a ``git status`` in between each command.
 
 
-Check the Project History
--------------------------
+Review the Project History
+--------------------------
 
 If we want to know what we've done recently, we can ask Git to show us the
 project's history using ``git log``:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git log
-   commit 13e07d9dd6a6d3b47f4b7537035c9c532fb7cf4e
+   [fta]$ git log
+   commit 2f7308543b4b339546cc680563606d9c9de87b97 (HEAD -> main)
    Author: Joe Allen <wallen@tacc.utexas.edu>
-   Date:   Wed Jan 27 23:06:29 2021 -0600
+   Date:   Tue Oct 26 11:32:20 2021 -0500
 
-       adding states.json
+       adding Makefile
 
-   commit f20159ea98b276ff300b018fa420b514e53e2042
+   commit 50b4adc9086dfe12d5c7ec8e1e2c8b2fd26d5455
    Author: Joe Allen <wallen@tacc.utexas.edu>
-   Date:   Wed Jan 27 23:06:15 2021 -0600
+   Date:   Tue Oct 26 11:29:10 2021 -0500
 
-       adding json_write.py
+       started tracking hello world program
 
-   commit 3d5d6e2c6d23aa4fb3b800b535db6a228759866e
-   Author: Joe Allen <wallen@tacc.utexas.edu>
-   Date:   Wed Jan 27 23:06:03 2021 -0600
-
-       adding class.json
-
-   commit 344ec9fde550c6e009697b07298919946ff991f9
-   Author: Joe Allen <wallen@tacc.utexas.edu>
-   Date:   Wed Jan 27 23:00:17 2021 -0600
-
-       started tracking json example script
-
-The command ``git log`` lists all commits  made to a repository in reverse
+The command ``git log`` lists all commits made to a repository in reverse
 chronological order. The listing for each commit includes:
 
 * the commit's full identifier (which starts with the same characters as the
@@ -356,32 +439,73 @@ chronological order. The listing for each commit includes:
 * and the log message Git was given when the commit was created.
 
 
-Making Further Changes
-----------------------
+Add to the Repo
+---------------
 
-Now suppose we make a change to one of the files we are tracking. Edit the
-``json_ex.py`` script your favorite text editor and add some random comments
-into the script:
+Let's now suppose we want to add another program to this repository. Consider
+the following short program for estimating the value of pi:
 
-.. code-block:: bash
 
-   [isp02]$ vim json_ex.py
-   # make some changes in the script
-   # save and quit
+.. code-block:: cpp
+   :linenos:
 
-When we run ``git status`` now, it tells us that a file it already knows about
-has been modified:
+    #include <iostream>
+    #include <random>
+    #include <time.h>
+    using namespace std;
 
-.. code-block:: bash
+    int main() {
 
-   [isp02]$ git status
-   # On branch main
-   # Changes not staged for commit:
-   #   (use "git add <file>..." to update what will be committed)
-   #   (use "git checkout -- <file>..." to discard changes in working directory)
-   #
-   #       modified:   json_ex.py
-   #
+            int attempts=1000;
+            int tries=0;
+            int inside=0;
+            double ratio=0;
+            srand(time(NULL));
+
+            while (tries < attempts) {
+                    tries++;
+                    if (pow(rand()/double(RAND_MAX),2) +
+                        pow(rand()/double(RAND_MAX),2) < 1){
+                            inside++;
+                    }
+            }
+
+            ratio=4*(double(inside)/double(tries));
+            cout << "Final pi estimate from " << attempts
+                 << " attempts is " << ratio << endl;
+    }
+
+
+Copy the code above into a new file, e.g. ``pi_estimator.cpp``. Compile the code
+to make sure it works, then ``git add`` and ``git commit`` in sequence.
+
+EXERCISE
+~~~~~~~~
+
+* The above example uses 1000 random points within a unit square to estimate the
+  value of pi. You feel that 1000 is not very many, and you may get a better
+  estimate with more points. Use your favorite text editor to change the number
+  of ``attempts`` from 1000 to ``1000000``, then recompile and make sure the code
+  still works. If you are happy with the result, ``git add`` and ``git commit``
+  the changes.
+
+
+Check for File Changes
+~~~~~~~~~~~~~~~~~~~~~~
+
+
+If you made a change in the ``pi_estimator.pi`` program, when you run
+``git status`` it tells you that a file it already knows about has been modified:
+
+.. code-block:: console
+
+   [fta]$ git status
+   On branch main
+   Changes not staged for commit:
+     (use "git add <file>..." to update what will be committed)
+     (use "git restore <file>..." to discard changes in working directory)
+           modified:   pi_estimator.cpp
+
    no changes added to commit (use "git add" and/or "git commit -a")
 
 
@@ -392,31 +516,32 @@ So let's do that now. It is good practice to always review our changes before
 saving them. We do this using ``git diff``. This shows us the differences
 between the current state of the file and the most recently saved version:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git diff json_ex.py
-   diff --git a/json_ex.py b/json_ex.py
-   index 5d986e9..21877cb 100644
-   --- a/json_ex.py
-   +++ b/json_ex.py
-   @@ -18,7 +18,7 @@ def check_char_match(str1, str2):
-        else:
-            return( f'{str1} match FAILS' )
+    [fta]$ git diff pi_estimator.cpp
+    diff --git a/pi_estimator.cpp b/pi_estimator.cpp
+    index 7244743..2c0f39b 100644
+    --- a/pi_estimator.cpp
+    +++ b/pi_estimator.cpp
+    @@ -5,7 +5,7 @@ using namespace std;
 
-   -
-   +# open the json file and load into dict
-    with open('states.json', 'r') as f:
-        states = json.load(f)
+     int main() {
 
-The output is cryptic because it is actually a series of commands for tools like
-editors and ``patch`` telling them how to reconstruct one file given the other.
+    -       int attempts=1000;
+    +       int attempts=10000000;
+            int tries=0;
+            int inside=0;
+            double ratio=0;
+
+The output is a bit cryptic because it is actually a series of commands for
+tools like ``patch`` telling them how to reconstruct one file given the other.
 If we break it down into pieces:
 
 
 * The first line tells us that Git is producing output similar to the Unix
   ``diff`` command comparing the old and new versions of the file.
 * The second line tells exactly which versions of the file Git is comparing:
-  ``5d986e9`` and ``21877cb`` are unique computer-generated labels for those
+  ``7244743`` and ``2c0f39b`` are unique computer-generated labels for those
   versions.
 * The third and fourth lines once again show the name of the file being changed.
 * The remaining lines are the most interesting, they show us the actual
@@ -425,38 +550,37 @@ If we break it down into pieces:
 
 After reviewing our change, it's time to commit it:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git add json_ex.py
-   [isp02]$ git commit -m "added a descriptive comment"
-   [main 8d5f563] added a descriptive comment
-    1 file changed, 1 insertion(+), 1 deletion(-)
-   [isp02]$ git status
-   # On branch main
-   nothing to commit, working directory clean
+    [fta]$ git add pi-estimator.cpp
+    [fta]$ git commit -m "increasing the number of attempts"
+    [main 9a1578f] increasing the number of attempts
+     1 file changed, 1 insertion(+), 1 deletion(-)
 
 Git insists that we add files to the set we want to commit before actually
 committing anything. This allows us to commit our changes in stages and capture
-changes in logical portions rather than only large batches. For example, suppose
-we're adding a few citations to relevant research to our thesis. We might want
-to commit those additions, and the corresponding bibliography entries, but *not*
-commit some of our work drafting the conclusion (which we haven't finished yet).
+changes in logical portions rather than only large batches. As the classic Git
+saying goes: **Commit early, commit often**.
 
+EXERCISE
+~~~~~~~~
 
+* Add another target to the ``Makefile`` for compiling the ``pi_estimator.cpp``
+  program. Test it out, then ``git add`` and ``git commit`` in sequence.
 
 Directories in Git
-------------------
+~~~~~~~~~~~~~~~~~~
 
 There are a couple important facts you should know about directories in Git.
 First, Git does not track directories on their own, only files within them. Try
 it for yourself:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ mkdir directory
-   [isp02]$ git status
-   [isp02]$ git add directory
-   [isp02]$ git status
+   [fta]$ mkdir directory
+   [fta]$ git status
+   [fta]$ git add directory
+   [fta]$ git status
 
 Note, our newly created empty directory ``directory`` does not appear in the
 list of untracked files even if we explicitly add it (*via* ``git add``) to our
@@ -465,9 +589,9 @@ repository.
 Second, if you create a directory in your Git repository and populate it with files,
 you can add all files in the directory at once by:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git add <directory-with-files>
+   [fta]$ git add <directory-with-files>
 
 .. tip::
 
@@ -477,30 +601,29 @@ you can add all files in the directory at once by:
    to also be tracked.
 
 
-Restoring Old Versions of Files
--------------------------------
+Restore Old Versions of Files
+-----------------------------
 
 We can save changes to files and see what we've changed — now how can we restore
 older versions of things? Let's suppose we accidentally overwrite our file:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ echo "" > json_ex.py
-   [isp02]$ cat json_ex.py
+   [fta]$ echo "" > pi_estimator.cpp
+   [fta]$ cat pi_estimator.cpp                  # oops!
 
 Now ``git status`` tells us that the file has been changed, but those changes
 haven't been staged:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git status
-   # On branch main
-   # Changes not staged for commit:
-   #   (use "git add <file>..." to update what will be committed)
-   #   (use "git checkout -- <file>..." to discard changes in working directory)
-   #
-   #       modified:   json_ex.py
-   #
+   [fta]$ git status
+   On branch main
+   Changes not staged for commit:
+     (use "git add <file>..." to update what will be committed)
+     (use "git restore <file>..." to discard changes in working directory)
+           modified:   pi-estimator.cpp
+
    no changes added to commit (use "git add" and/or "git commit -a")
 
 
@@ -508,11 +631,13 @@ We can put things back the way they were by using ``git checkout`` and referring
 to the *most recent commit* of the working directory by using the identifier
 ``HEAD``:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git checkout HEAD json_ex.py
-   [isp02]$ cat json_ex.py
-   import json
+   [fta]$ git checkout HEAD pi_estimator.cpp
+   Updated 1 path from 4afd949
+   [fta]$ cat pi_estimator.cpp
+   #include <iostream>
+   #include <random>
    ...etc
 
 As you might guess from its name, ``git checkout`` checks out (i.e., restores)
@@ -523,58 +648,58 @@ instead:
 
 
 
-.. code-block:: bash
-   :emphasize-lines: 26
+.. code-block:: console
+   :emphasize-lines: 20
 
-   [isp02]$ git log
-   commit 8d5f563fa20060f4fbe2e10ec5cbc3c22fe92559
+   [fta]$ git log
+   commit 08f311e2e4c9a2c3bc9cc1cb407b6485564e54b3 (HEAD -> main)
    Author: Joe Allen <wallen@tacc.utexas.edu>
-   Date:   Wed Jan 27 23:15:46 2021 -0600
+   Date:   Tue Oct 26 12:16:05 2021 -0500
 
-    added a descriptive comment
+       added target for pi_estimator to Makefile
 
-   commit 13e07d9dd6a6d3b47f4b7537035c9c532fb7cf4e
+   commit 9a1578fe2211912528e385937390683ae7582816
    Author: Joe Allen <wallen@tacc.utexas.edu>
-   Date:   Wed Jan 27 23:06:29 2021 -0600
+   Date:   Tue Oct 26 12:11:59 2021 -0500
 
-    adding states.json
+       increasing the number of attempts
 
-   commit f20159ea98b276ff300b018fa420b514e53e2042
+   commit 40017224ec1f35c478779f3388b4ba5c96206c41
    Author: Joe Allen <wallen@tacc.utexas.edu>
-   Date:   Wed Jan 27 23:06:15 2021 -0600
+   Date:   Tue Oct 26 12:04:01 2021 -0500
 
-    adding json_write.py
+       started tracking pi-estimator program
 
-   commit 3d5d6e2c6d23aa4fb3b800b535db6a228759866e
+   commit 2f7308543b4b339546cc680563606d9c9de87b97
    Author: Joe Allen <wallen@tacc.utexas.edu>
-   Date:   Wed Jan 27 23:06:03 2021 -0600
+   Date:   Tue Oct 26 11:32:20 2021 -0500
 
-    adding class.json
+       adding Makefile
 
-   commit 344ec9fde550c6e009697b07298919946ff991f9
+   commit 50b4adc9086dfe12d5c7ec8e1e2c8b2fd26d5455
    Author: Joe Allen <wallen@tacc.utexas.edu>
-   Date:   Wed Jan 27 23:00:17 2021 -0600
+   Date:   Tue Oct 26 11:29:10 2021 -0500
 
-    started tracking json example script
+       started tracking hello world program
 
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git checkout 344ec9f json_ex.py
-   # now you have a copy of json_ex.py without that comment we added
+   [fta]$ git checkout 2f73085 Makefile
+   # now you have a copy the earliest version of the Makefile
 
 Again, we can put things back the way they were by using ``git checkout``:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git checkout HEAD json_ex.py
-   # back to the most recent version
+   [fta]$ git checkout HEAD *
+   # back to the most recently committed versions of all files
 
 
 Link a Local Repository to GitHub
 ---------------------------------
 
-Version control really comes into its own when we begin to collaborate with
+Version control really shows its power when we begin to collaborate with
 other people.  We already have most of the machinery we need to do this; the
 only thing missing is to copy changes from one repository to another.
 
@@ -595,14 +720,15 @@ create a new repository:
 
 
 As soon as the repository is created, GitHub displays a page with a URL and some
-information on how to configure your local repository. Provide a name for your
-new repository like ``json-parser`` (or whatever you want).
+information on how to configure your local repository. Provide a descriptive name
+for your new repository like ``pi-estimator`` (or whatever you want).
 
-Note that our local repository still contains our earlier work on ``json_ex.py``
-and other files, but the remote repository on GitHub doesn't contain any memory
-of ``json_ex.py`` yet. The next step is to connect the two repositories.  We do
-this by making the GitHub repository a "remote" for the local repository. The
-home page of the repository on GitHub includes the string we need to identify it:
+Note that our local repository contains our most recent version of ``pi_estimator.cpp``,
+as well as a history of the changes of all of the files in the repo. But, the
+remote repository on GitHub doesn't contain any memory of any files yet. The next
+step is to connect the two repositories. We do this by making the GitHub
+repository a "remote" for the local repository. The home page of the repository
+on GitHub includes the string we need to identify it:
 
 .. figure:: ./images/github_instructions.png
    :width: 400px
@@ -611,19 +737,21 @@ home page of the repository on GitHub includes the string we need to identify it
    Follow the instructions for pushing an existing repository.
 
 
-Back on ISP in the local Git repo, link it to the repo on GitHub and confirm the
-link was created:
+Back on Frontera in the local Git repo, link it to the repo on GitHub and confirm
+the link was created:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git remote add origin https://github.com/wjallen/json-parser.git
-   [isp02]$ git remote -v
-   origin  https://github.com/wjallen/json-parser.git (fetch)
-   origin  https://github.com/wjallen/json-parser.git (push)
+   [fta]$ git remote add origin git@github.com:wjallen/pi-estimator.git
+   [fta]$ git remote -v
+   origin  git@github.com:wjallen/pi-estimator.git (fetch)
+   origin  git@github.com:wjallen/pi-estimator.git (push)
+
 
 .. attention::
 
    Make sure to use the URL for your repository instead of the one listed here.
+   This will only work if you correctly set up SSH keys.
 
 The name ``origin`` is a local nickname for your remote repository. We could use
 something else if we wanted to, but ``origin`` is by far the most common choice.
@@ -631,43 +759,43 @@ something else if we wanted to, but ``origin`` is by far the most common choice.
 Once the nickname ``origin`` is set up, this command will push the changes from
 our local repository to the repository on GitHub:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git branch -M main
-   [isp02]$ git push -u origin main
-   Username for 'https://github.com': wjallen
-   Password for 'https://wjallen@github.com':
-   Counting objects: 15, done.
-   Delta compression using up to 4 threads.
-   Compressing objects: 100% (14/14), done.
-   Writing objects: 100% (15/15), 2.30 KiB | 0 bytes/s, done.
-   Total 15 (delta 4), reused 0 (delta 0)
-   remote: Resolving deltas: 100% (4/4), done.
-   To https://github.com/wjallen/json-parser.git
+   [fta]$ git branch -M main
+   [fta]$ git push -u origin main
+   Enumerating objects: 15, done.
+   Counting objects: 100% (15/15), done.
+   Delta compression using up to 28 threads
+   Compressing objects: 100% (13/13), done.
+   Writing objects: 100% (15/15), 1.67 KiB | 284.00 KiB/s, done.
+   Total 15 (delta 3), reused 0 (delta 0)
+   remote: Resolving deltas: 100% (3/3), done.
+   To github.com:wjallen/pi-estimator.git
     * [new branch]      main -> main
-   Branch main set up to track remote branch main from origin.
+   Branch 'main' set up to track remote branch 'main' from 'origin'.
 
 
 Clone the Repository
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 Spend a few minutes browsing the web interface for GitHub. Now, anyone can make
 a full copy of ``my_first_repo`` including all the commit history by performing:
 
-.. code-block:: bash
+.. code-block:: console
 
-   [isp02]$ git clone https://github.com/wjallen/json-parser
-   Cloning into 'json-parser'...
+   [fta]$ git clone git@github.com:wjallen/pi-estimator.git
+   Cloning into 'pi-estimator'...
    remote: Enumerating objects: 15, done.
    remote: Counting objects: 100% (15/15), done.
    remote: Compressing objects: 100% (10/10), done.
-   remote: Total 15 (delta 4), reused 15 (delta 4), pack-reused 0
-   Unpacking objects: 100% (15/15), done.
+   remote: Total 15 (delta 3), reused 15 (delta 3), pack-reused 0
+   Receiving objects: 100% (15/15), done.
+   Resolving deltas: 100% (3/3), done.
 
 
 
-Collaborating with Others
--------------------------
+Collaborate with Others
+-----------------------
 
 A public platform like GitHub makes it easier than ever to collaborate with
 others on the content of a repository. You can have as many local copies of a
@@ -688,7 +816,7 @@ repositories where separate individuals are working on different features is the
 Some important definitions (most can easily be managed right in the GitHub web
 interface):
 
-FORK
+Fork
 ~~~~
 
 A fork is a personal copy of another user's repository that lives on your
@@ -697,7 +825,7 @@ the original. Forks remain attached to the original, allowing you to submit a
 pull request to the original's author to update with your changes. You can also
 keep your fork up to date by pulling in updates from the original.
 
-BRANCH
+Branch
 ~~~~~~
 
 A branch is a parallel version of a repository. It is contained within the
@@ -707,7 +835,7 @@ you want to make, you can merge your branch back into the main branch to
 publish your changes. For more information, see
 `About branches <https://help.github.com/articles/about-branches>`_.
 
-TAG
+Tag
 ~~~
 
 Git has the ability to tag specific points in history as being important.
@@ -715,7 +843,7 @@ Typically people use this functionality to mark release points (v1.0, and so
 on).
 
 
-PULL REQUEST / MERGE REQUEST
+Pull Request / Merge Request
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Pull requests are proposed changes to a repository submitted by a user and
@@ -724,7 +852,7 @@ ach have their own discussion forum. For more information, see `About pull
 requests <https://help.github.com/articles/about-pull-requests>`_.
 
 
-OTHER CONSIDERATIONS
+Other Considerations
 ~~~~~~~~~~~~~~~~~~~~
 
 Most repos will also contain a few standard files in the top directory,
